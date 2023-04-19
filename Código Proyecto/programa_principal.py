@@ -1,13 +1,20 @@
 import registro_nuevo_usuario
 import configuracion_avanzada
 import usuariso_registrados
+#import Proyecto
 
 #creo que aquí hay un error
-archivo = open("Usuarios_y_Pines.txt", "r")
-arreglo = archivo.readlines()
-archivo.close()
-todoEnUno = [n.rstrip() for n in arreglo]
-usuariosYPines = [todoEnUno[i:i + 3] for i in range(0, len(todoEnUno), 3)]
+try:
+    archivo = open("Usuarios_y_Pines.txt", "r")
+    arreglo = archivo.readlines()
+    archivo.close()
+    todoEnUno = [n.rstrip() for n in arreglo]
+    usuariosYPines = [todoEnUno[i:i + 3] for i in range(0, len(todoEnUno), 3)]
+except FileNotFoundError:
+    archivo = open("Usuarios_y_Pines.txt", "w")
+    archivo.close()
+    usuariosYPines = []
+
 
 
 while True:
@@ -20,10 +27,9 @@ while True:
         registro_nuevo_usuario.registroNuevoUsuario(usuariosYPines)
     elif opcionMenuPrincipal == "2":
         usuariso_registrados.autenticarUsuario(usuariosYPines)
-        print("op2")
     elif opcionMenuPrincipal == "3":
         configuracion_avanzada.solicitar_pin_especial(usuariosYPines)
     elif opcionMenuPrincipal == "4":
-        print("op4")
+        break
     else:
         print("El valor ingresado no corresponde a ninguna de las opciones anteriores.")

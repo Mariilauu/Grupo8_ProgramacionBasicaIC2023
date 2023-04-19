@@ -1,0 +1,6 @@
+1. Compra de colones:589.0
+2. Venta de colones:0.6
+3. Compra de dólares:8.0
+4. Venta de dólares:8.5
+5. Compra de bitcoin:5000
+6. Venta de bitcoin:5500
