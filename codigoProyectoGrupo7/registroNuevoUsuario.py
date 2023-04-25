@@ -1,28 +1,15 @@
-#Fecha: 2/4/2023
+# Primera opción del menú ubicado en programa principal.
+# Crea un usuario nuevo (cedula, nombre, pin y hace depósito obligatorio)
+# Guarda los datos en archivos.
 
+#Bibliotecas importadas
 import os
-#import getpass
 import random
+import comun
 
-#def agregarUsuariosAMatriz():
- #   archivo = open("Usuarios_y_Pines.txt", "r")
-  #  arreglo = archivo.readlines()
-   # archivo.close()
-    #todoEnUno = [n.rstrip() for n in arreglo]
-    #lista = [todoEnUno[i:i + 3] for i in range(0, len(todoEnUno), 3)]
+#***********************************************************************************************************************
 
-
-    #matriz = []
-    #if len(todoEnUno) > 0:
-    #    numeroLinea = 0
-    #    totalLineas = len(todoEnUno)
-     #   numeroUsuario = totalLineas / 3
-      #  for i in range(int(numeroUsuario - 1)):
-       #     lista = [todoEnUno[numeroLinea], todoEnUno[numeroLinea + 1], todoEnUno[numeroLinea + 2]]
-        #    matriz.append(lista)
-         #   numeroLinea += 3
-
-
+#Función para registrar la cédula para un nuevo usuario
 def registrarNuevoUsuarioCedula ():
     # Permitirá almacenar el número de cédula del nuevo usuario.
     intentos = 3
@@ -41,13 +28,22 @@ def registrarNuevoUsuarioCedula ():
             intentos -= 1
             cedulaNueva = "0"
     return cedulaNueva
+
 #***********************************************************************************************************************
+
+#Función para registrar el nombre del nuevo usuario
 def registrarNuevoUsuarioNombre ():
     # Solicitud del Nombre.
     print("\nSolicitud del Nombre.")
-    nombreDeUsuario = input("Ingrese su nombre completo, por favor.\nNombre: ")
+    while True:
+        nombreDeUsuario = input("Ingrese su nombre completo, por favor.\nNombre: ")
+        if len(nombreDeUsuario)>0:
+            break
     return nombreDeUsuario
+
 #***********************************************************************************************************************
+
+#Función para registrar el pin del nuevo usuario
 def registrarNuevoUsuarioPin():
     # Escogencia del PIN
 # Falta GETPASS
@@ -65,50 +61,65 @@ def registrarNuevoUsuarioPin():
         else:
             print("Su PIN debe contener cuatro dígitos.")
     return autentificacionPIN
+
 #***********************************************************************************************************************
+
 #Registrar Nuevo usuario Depósito Obligatorio
-def dolares():
-    tipoDecambioDolares = 555.80
-    montoMinimoDolares = 100000 / tipoDecambioDolares
+#Función para depósito en dólares
+def dolares(tiposCambio):
+    tipoDecambioDolares = tiposCambio[1]
+    montoMinimoDolares = 100000 / float(tipoDecambioDolares)
 
     intentoDepositoObligatorio = 3
     while intentoDepositoObligatorio>0:
         print("\nPor favor ingrese una cantidad igual o mayor a ", montoMinimoDolares, " dolares.")
-        depositoObligatorioDolares = float(input("Depósito: "))
+        depositoObligatorioDolares = float(comun.capturaMonto("Depósito: ", 1))
         if depositoObligatorioDolares >= montoMinimoDolares:
             return str(depositoObligatorioDolares)
         else:
             depositoObligatorioDolares ="0"
             print("El monto ingresado es menor al depósito mínimo.")
             intentoDepositoObligatorio -= 1
+    return depositoObligatorioDolares
 
-def colones():
+#*********************************************************
+
+#Función para depósito en colones
+def colones(tiposCambio):
     intentoDepositoObligatorio = 3
     while intentoDepositoObligatorio > 0:
-        depositoObligatorioColones = float(input("\nPor favor ingrese una cantidad igual o mayor a 100 000 colones.\nDepósito: "))
+        depositoObligatorioColones = float(comun.capturaMonto("\nPor favor ingrese una cantidad igual o mayor a 100 000 colones.\nDepósito: ", 1))
         if depositoObligatorioColones >= 100000:
             return str(depositoObligatorioColones)
         else:
             depositoObligatorioColones = "0"
             intentoDepositoObligatorio -= 1
             print("El monto ingresado es menor al depósito mínimo.")
+    return depositoObligatorioColones
 
-def bitcoins():
-    tipoDecambioBitcoins = 12418330.72
-    montoMinimoBitcoins = 100000 / tipoDecambioBitcoins
+#*********************************************************
+
+#Función para depósito en bitcoins
+def bitcoins(tiposCambio):
+    tipoDecambioBitcoins = tiposCambio[6]
+    montoMinimoBitcoins = 100000 / float(tipoDecambioBitcoins)
     intentoDepositoObligatorio = 3
     while intentoDepositoObligatorio > 0:
         print("\nPor favor ingrese una cantidad igual o mayor a ", montoMinimoBitcoins, " bitcoins.")
-        depositoObligatorioBitcoins = float(input("Depósito: "))
+        depositoObligatorioBitcoins = float(comun.capturaMonto("Depósito: ", 1))
         if depositoObligatorioBitcoins >= montoMinimoBitcoins:
             return str(depositoObligatorioBitcoins)
         else:
             depositoObligatorioBitcoins ="0"
             intentoDepositoObligatorio -= 1
             print("El monto ingresado es menor al depósito mínimo.")
+    return depositoObligatorioBitcoins
+
 #***********************************************************************************************************************
+
+#Función para guardar cedula, nombre y pin, una vez creado el usuario
 def guardarInformacionUsuarios(cedula, nombre, pin):
-    archivo = open("Usuarios_y_Pines.txt", 'a')
+    archivo = open(comun.NombreArchivoUsuarios, 'a')
     archivo.write(cedula)
     archivo.write("\n")
     archivo.write(nombre)
@@ -117,6 +128,9 @@ def guardarInformacionUsuarios(cedula, nombre, pin):
     archivo.write("\n")
     archivo.close()
 
+#***********************************************************************************************************************
+
+#Función para guardar los saldos del usuario (cuentas en dolar, colones y bitcoins) y crear los servicios de forma aleatoria
 def guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin,cedula):
     carpetaUsuario = cedula
     if not os.path.exists(carpetaUsuario):
@@ -124,15 +138,16 @@ def guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin,cedula):
         infoSaldos = "saldos.txt"
         guardarInfoSaldos = os.path.join(carpetaUsuario, infoSaldos)
 
+#Guarda montos en cuentas
         archivo = open(guardarInfoSaldos, 'a')
-        archivo.write("Dolares\n")
         archivo.write(monedaDolar)
-        archivo.write("\nColones\n")
+        archivo.write("\n")
         archivo.write(monedaColon)
-        archivo.write("\nBitcoins\n")
+        archivo.write("\n")
         archivo.write(monedaBitcoin)
         archivo.close()
 
+#Crea de forma aleatoria servicio 1
         servicios = "1.txt"
         guardarInfoServicios = os.path.join(carpetaUsuario, servicios)
         estadoServicio = random.randint(0, 1)
@@ -144,6 +159,7 @@ def guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin,cedula):
         archivo.write(str(montoServicio))
         archivo.close()
 
+#Crea de forma aleatoria servicio 2
         servicios = "2.txt"
         guardarInfoServicios = os.path.join(carpetaUsuario, servicios)
         estadoServicio = random.randint(0, 1)
@@ -155,6 +171,7 @@ def guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin,cedula):
         archivo.write(str(montoServicio))
         archivo.close()
 
+# Crea de forma aleatoria servicio 3
         servicios = "3.txt"
         guardarInfoServicios = os.path.join(carpetaUsuario, servicios)
         estadoServicio = random.randint(0, 1)
@@ -166,6 +183,7 @@ def guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin,cedula):
         archivo.write(str(montoServicio))
         archivo.close()
 
+# Crea de forma aleatoria servicio 4
         servicios = "4.txt"
         guardarInfoServicios = os.path.join(carpetaUsuario, servicios)
         estadoServicio = random.randint(0, 1)
@@ -177,6 +195,7 @@ def guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin,cedula):
         archivo.write(str(montoServicio))
         archivo.close()
 
+# Crea de forma aleatoria servicio 5
         servicios = "5.txt"
         guardarInfoServicios = os.path.join(carpetaUsuario, servicios)
         estadoServicio = random.randint(0, 1)
@@ -188,6 +207,7 @@ def guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin,cedula):
         archivo.write(str(montoServicio))
         archivo.close()
 
+# Crea de forma aleatoria servicio 6
         servicios = "6.txt"
         guardarInfoServicios = os.path.join(carpetaUsuario, servicios)
         estadoServicio = random.randint(0, 1)
@@ -199,6 +219,7 @@ def guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin,cedula):
         archivo.write(str(montoServicio))
         archivo.close()
 
+# Crea de forma aleatoria servicio 7
         servicios = "7.txt"
         guardarInfoServicios = os.path.join(carpetaUsuario, servicios)
         estadoServicio = random.randint(0, 1)
@@ -212,57 +233,51 @@ def guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin,cedula):
     else:
         print("El usuario ", carpetaUsuario, " ya existe.")
 
-def registroNuevoUsuario(matriz):
+#***********************************************************************************************************************
+
+#Función principal donde se unen las funciones de registroNuevoUsuarioCedula, registroNuevoUsuarioNombre y registroNuevoUsuarioPin
+#así como cada una de las funciones de las monedas
+def registroNuevoUsuario(matriz,tipoCambio):
+    # Registrar Usuario
+    # Permitirá almacenar el número de cédula del nuevo usuario.
+    cedula = registrarNuevoUsuarioCedula()
+    if cedula == "0":
+        print("Se excedió el máximo de intentos para ingresar un número de cédula válido, volviendo al menú principal.")
+        return
+    else:
+        print("Cédula procesada correctamente.")
+    # Permitirá almacenar el nombre del nuevo usuario.
+    nombre = registrarNuevoUsuarioNombre()
+    # Permitirá crear un PIN para el nuevo usuario.
+    pin = registrarNuevoUsuarioPin()
+    if pin.isdigit() and len(pin) == 4:
+        print("Su PIN ha sido validado.")
+    else:
+        return
+    # Permitirá hacer un depósito
+    print("\nDepósito obligatorio.")
+    monedaDolar = "0"
+    monedaColon = "0"
+    monedaBitcoin = "0"
     while True:
-        # Registrar Usuario
-        # Permitirá almacenar el número de cédula del nuevo usuario.
-        cedula = registrarNuevoUsuarioCedula()
-        if cedula == "0":
+        # Selección de la moneda
+        print("Ingrese la opción de acuerdo al tipo de moneda que desea utilizar para realizar el depósito.")
+        monedaDepositoObligatorio = input("1.Dolares\n2.Colones\n3.Bitcoins\nOpción: ")
+        if monedaDepositoObligatorio == "1":
+            monedaDolar = dolares(tipoCambio)
+            break
+        elif monedaDepositoObligatorio == "2":
+            monedaColon = colones(tipoCambio)
+            break
+        elif monedaDepositoObligatorio == "3":
+            monedaBitcoin = bitcoins(tipoCambio)
             break
         else:
-            print("Cédula procesada correctamente.")
-        # Permitirá almacenar el nombre del nuevo usuario.
-        nombre = registrarNuevoUsuarioNombre()
-        # Permitirá crear un PIN para el nuevo usuario.
-        pin = registrarNuevoUsuarioPin()
-        if pin.isdigit() and len(pin) == 4:
-            print("Su PIN ha sido validado.")
-        else:
-            break
-        # Permitirá hacer un depósito
-        print("\nDepósito obligatorio.")
-        while True:
-            # Selección de la moneda
-            print("Ingrese la opción de acuerdo al tipo de moneda que desea utilizar para realizar el depósito.")
-            monedaDepositoObligatorio = input("1.Dolares\n2.Colones\n3.Bitcoins\nOpción: ")
-            if monedaDepositoObligatorio == "1":
-                monedaDolar = dolares()
-                if monedaDolar == "0":
-                    break
-                else:
-                    monedaColon = "0"
-                    monedaBitcoin = "0"
-                break
-            elif monedaDepositoObligatorio == "2":
-                monedaColon = colones()
-                if monedaColon == "0":
-                    break
-                else:
-                    monedaDolar = "0"
-                    monedaBitcoin = "0"
-                break
-            elif monedaDepositoObligatorio == "3":
-                monedaBitcoin = bitcoins()
-                if monedaBitcoin == "0":
-                    break
-                else:
-                    monedaDolar = "0"
-                    monedaColon = "0"
-                break
-            else:
-                print("El valor ingresado no corresponde a ninguna de las opciones anteriores.")
+            print("El valor ingresado no corresponde a ninguna de las opciones anteriores.")
+    #Guarda los datos
+    if monedaDolar != "0" or monedaColon != "0" or monedaBitcoin != "0":
         guardarInformacionUsuarios(cedula, nombre, pin)
         usuario = [cedula, nombre, pin]
         matriz.append(usuario)
-        guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin,cedula)
-        break
+        guardarDatosPorUsuario(monedaDolar, monedaColon, monedaBitcoin, cedula)
+        print("El usuario fue creado de forma exitosa.")
