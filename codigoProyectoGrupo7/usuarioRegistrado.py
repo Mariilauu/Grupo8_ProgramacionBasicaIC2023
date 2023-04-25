@@ -5,6 +5,7 @@
 #Bibliotecas importadas
 import comun
 import os
+import getpass
 
 #***********************************************************************************************************************
 
@@ -46,7 +47,7 @@ def ingresarCedula():
 def ingresarPin(cedula, matriz):
     intentos = 3
     while intentos > 0:
-        pin = input("Ingrese su PIN: ")
+        pin = getpass.getpass(prompt="Ingrese su PIN: ")
         for i in range(len(matriz)):
             if matriz[i][0] == cedula and matriz[i][2] == pin:
                 return pin, matriz[i][1]
@@ -639,7 +640,7 @@ def conversionMonedas(opcion, rutaSaldos, tiposCambio, saldos):
 
 #Función para eliminar el usuario autenticado
 def eliminarUsuario(cedula, pin, matriz):
-    pinIngresado = input("Ingrese su PIN: ")
+    pinIngresado = getpass.getpass(prompt="Ingrese su PIN: ")
     if pin == pinIngresado:
         eliminar = comun.eliminaUsuario(cedula, matriz)
         if eliminar is True:

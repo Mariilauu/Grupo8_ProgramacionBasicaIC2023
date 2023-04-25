@@ -6,6 +6,7 @@
 import os
 import random
 import comun
+import getpass
 
 #***********************************************************************************************************************
 
@@ -49,10 +50,10 @@ def registrarNuevoUsuarioPin():
 # Falta GETPASS
     while True:
         print("\nEscogencia del PIN.")
-        pin = (input("Por favor ingrese un PIN de cuatro dígitos. Este le permitirá ingresar a su cuenta.\nPIN: "))
+        pin = (getpass.getpass(prompt="Por favor ingrese un PIN de cuatro dígitos. Este le permitirá ingresar a su cuenta.\nPIN: "))
         if pin.isdigit() and len(pin) == 4:
             while True:
-                autentificacionPIN = (input("Reingrese el PIN para su verificación.\nVerificacón PIN: "))
+                autentificacionPIN = (getpass.getpass(prompt="Reingrese el PIN para su verificación.\nVerificacón PIN: "))
                 if autentificacionPIN == pin:
                     break
                 else:

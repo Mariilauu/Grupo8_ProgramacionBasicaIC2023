@@ -5,12 +5,13 @@
 
 #Bibliotecas importadas
 import comun
+import getpass
 
 #***********************************************************************************************************************
 
 # Solicita y valida el pin especial.
 def solicitarPinEspecial(usuariosYPines, pinEspecial, tiposCambio):
-    pin = input("\nIngrese el PIN especial: ")
+    pin = getpass.getpass(prompt="\nIngrese el PIN especial: ")
     if pin == pinEspecial:
         mostrarMenu(usuariosYPines, tiposCambio)
     else:
