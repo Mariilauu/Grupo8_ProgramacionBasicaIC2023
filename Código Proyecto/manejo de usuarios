@@ -1,0 +1,60 @@
+import os
+
+# Ruta de los archivos de texto plano
+USUARIOS_FILE = "usuarios.txt"
+CONFIG_FILE = "config.txt"
+
+def solicitar_PIN_especial():
+    pin = input("Ingrese el PIN especial: ")
+    with open(CONFIG_FILE, 'r') as f:
+        config = dict(line.strip().split('=') for line in f)
+    if pin == config['PIN_especial']:
+        print("Bienvenido al modo especial")
+        # mostrar características adicionales
+    else:
+        mostrar_menu()
+
+def eliminar_usuario():
+    usuario = input("Ingrese el nombre de usuario a eliminar: ")
+    with open(USUARIOS_FILE, 'r') as f:
+        usuarios = dict(line.strip().split(':') for line in f)
+    if usuario in usuarios:
+        del usuarios[usuario]
+        with open(USUARIOS_FILE, 'w') as f:
+            for usuario, contrasena in usuarios.items():
+                f.write(f"{usuario}:{contrasena}\n")
+        print("El usuario ha sido eliminado")
+    else:
+        print("El usuario no existe")
+
+def modificar_tipos_de_cambio():
+    # código para modificar tipos de cambio
+    pass
+
+def mostrar_menu():
+    print("1. Solicitar PIN especial")
+    print("2. Eliminar usuario")
+    print("3. Modificar tipos de cambio")
+    print("4. Salir")
+    opcion = input("Ingrese una opción: ")
+    if opcion == "1":
+        solicitar_PIN_especial()
+    elif opcion == "2":
+        eliminar_usuario()
+    elif opcion == "3":
+        modificar_tipos_de_cambio()
+    elif opcion == "4":
+        print("Adiós")
+    else:
+        print("Opción inválida")
+        mostrar_menu()
+
+# Comprobar si los archivos de texto plano existen, y crearlos si no existen
+if not os.path.exists(USUARIOS_FILE):
+    with open(USUARIOS_FILE, 'w') as f:
+        f.write("usuario1:contrasena1\nusuario2:contrasena2\n")
+if not os.path.exists(CONFIG_FILE):
+    with open(CONFIG_FILE, 'w') as f:
+        f.write("PIN_especial=1234\n")
+
+mostrar_menu()
